@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Section = ({ title, children }) => {
   return (
     <section>
-      <h2>{title}</h2>
+      <h3>{title}</h3>
       {children}
     </section>
   );

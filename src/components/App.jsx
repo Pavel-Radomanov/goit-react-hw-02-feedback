@@ -1,21 +1,8 @@
 import React, { Component } from 'react';
-// import Section from './Section/Section';
+import Section from './Section/Section';
 import Statistics from './Statistics/Statistics';
 import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
-const buttonStyle = {
-  border: 0,
-  lineHeight: 2.5,
-  padding: '20px',
-  fontSize: '1rem',
-  textAlign: 'center',
-  color: '#fff',
-  textShadow: '1px 1px 1px #000',
-  borderRadius: '10px',
-  backgroundColor: 'rgba(220, 0, 0, 1)',
-  backgroundImage:
-    'linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0))',
-  boxShadow: 'inset 2px 2px 3px rgba(255, 255,0, 0.2)',
-};
+import Notification from './Notification/Notification';
 
 class App extends Component {
   state = {
@@ -23,22 +10,12 @@ class App extends Component {
     neutral: 0,
     bad: 0,
   };
-  handleClickGood = e => {
+  handleClickButton = event => {
+    const name = event.target.name;
     this.setState(prevState => {
       console.log(prevState);
-      return { good: prevState.good + 1 };
-    });
-  };
-  handleClickNeutral = e => {
-    this.setState(prevState => {
-      console.log(prevState);
-      return { neutral: prevState.neutral + 1 };
-    });
-  };
-  handleClickBad = e => {
-    this.setState(prevState => {
-      console.log(prevState);
-      return { bad: prevState.bad + 1 };
+      console.log(name);
+      return { [name]: prevState[name] + 1 };
     });
   };
 
@@ -51,6 +28,8 @@ class App extends Component {
       : '0';
   };
   render() {
+    const buttonNames = Object.keys(this.state);
+    // console.log(buttonName);
     return (
       <div
         style={{
@@ -58,49 +37,49 @@ class App extends Component {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'right',
+          marginLeft: '50px',
           fontSize: 30,
           color: '#010101',
         }}
       >
-        <h3>Please leave feedback</h3>
-        {/* <Section title="Please live feedback"></Section> */}
-        <FeedbackOptions
-          options={this.state}
-          onLeaveFeedback={[
-            this.handleClickGood,
-            this.handleClickNeutral,
-            this.handleClickBad,
-          ]}
-        />
-        .
-        <button style={buttonStyle} onClick={this.handleClickGood}>
-          good
-        </button>
-        <button style={buttonStyle} onClick={this.handleClickNeutral}>
-          neutral
-        </button>
-        <button style={buttonStyle} onClick={this.handleClickBad}>
-          bad
-        </button>
-        <br />
-        <h3>Statistics</h3>
-        <Statistics
-          good={this.state.good}
-          neutral={this.state.neutral}
-          bad={this.state.bad}
-          total={this.totalFeedbacks()}
-          positivePercentage={this.countPositivePercent()}
-        />
-        .
-        {/* <p>Good:{this.state.good}</p>
-        <p>Neutral:{this.state.neutral}</p>
-        <p>Bad:{this.state.bad}</p>
-        <p>Total:{this.totalFeedbacks()}</p> */}
-        {/* <p>Positive feedback:{this.countPositivePercent()}%</p> */}
+        <Section title="Please leave feedback">
+          {/* <Section title="Please live feedback"></Section> */}
+          <FeedbackOptions
+            options={buttonNames}
+            onLeaveFeedback={this.handleClickButton}
+          />
+        </Section>
+
+        {this.totalFeedbacks() ? (
+          <Section title={'Statistics'}>
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.totalFeedbacks()}
+              positivePercentage={this.countPositivePercent()}
+            />
+          </Section>
+        ) : (
+          <Notification message={'There is no feedback'} />
+        )}
       </div>
     );
   }
 }
 export default App;
 // onLeaveFeedback={this.feedbackCounter}
+
+// handleClickNeutral = e => {
+//   this.setState(prevState => {
+//     console.log(prevState);
+//     return { neutral: prevState.neutral + 1 };
+//   });
+// };
+// handleClickBad = e => {
+//   this.setState(prevState => {
+//     console.log(prevState);
+//     return { bad: prevState.bad + 1 };
+//   });
+// };
